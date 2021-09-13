@@ -1,0 +1,58 @@
+# Assignment 3
+## by Catherine Cho
+
+### 1.Using the 173 majors listed in fivethirtyeight.com’s College Majors dataset [https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/], provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r}
+library(readr)
+urlfile<-"https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/majors-list.csv"
+majors<-read_csv(url(urlfile))
+library(tidyverse)
+library(stringr)
+x<-majors$Major
+str_view(x,"STATISTICS|DATA")
+
+```
+
+### 2.Write code that transforms the data below:
+
+```{r}
+string<-'[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+[13] "olive"        "salal berry"'
+
+w<-str_extract_all(string,"([a-z]+\\s([a-z])\\w+)|([a-z]+)")
+split<-strsplit(as.character(w), '((c)\\(\\")|(\\",\\s+\\")|(\\"\\))')[[1]]
+#removing the first empty cell after split
+split[-1]
+
+```
+
+### 3.Describe, in words, what these expressions will match:
+
+(.)\1\1:
+This is a numeric expression and the dot is the first capture group which matches any single character. The first numeric reference \1 matches the result of the dot (first capture group). Then repeats under the second first numeric reference. In other words, there will be a three repeated character string from the first captured character. (i.e.fff,aaa,111,)
+
+"(.)(.)\\2\\1"
+This is a string that represents a regular expression, therefore, an additional backslash is used to escape the string. The first and second dot matches any character and the numeric reference \\2 and \\1 will match the results of the first and second dot, respectively. In other words, \\2 will repeat the pattern from dot 1 and \\1 will repeat the pattern from dot 2. 
+
+(..)\1
+This is a regular expression that will group any two characters and the numeric reference \1 will repeat the result of this group. 
+
+"(.).\\1.\\1"
+This is a string that represents a regular expression. The dot in the parenthesis is a capture group that will capture any single character. The second dot (without parenthesis) is any single character. The first numeric reference \\1 will repeat the results of the first capture group. The third dot will match any single character. The last first numeric reference \\1 will repeat the result of the first capture group. 
+
+"(.)(.)(.).*\\3\\2\\1"
+This is a string that represent a regular expression. The three dots in the parenthesis are each a capture group, 1,2, and 3 that will capture any single character. The stand alone dot matches any character. The numeric expression 3, \\3 matches the result of capture group 3. Numeric expression 2, \\2 will repeat the result of capture group 2. Numeric reference 1, \\1 will repeat the result of capture group 1. 
+
+### 4.Construct regular expressions to match words that:
+- Start and end with the same character.
+(.)(.+|)\1
+
+- Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+(..)(.+|)\1
+
+- Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+(.)(.+|)\1(.+|)\1
+
